@@ -1,12 +1,16 @@
-FROM node:18-alpine
+FROM nginx:alpine
 
 WORKDIR /app
 
-COPY index.html .
-COPY server.js .
+# Copy the generation script
+COPY generate.sh .
 
-EXPOSE 6060
+# Make generation script executable
+RUN chmod +x generate.sh
+
+EXPOSE 80
 
 ENV DISPLAY_TEXT="Welcome to Hack Club!"
 
-CMD ["node", "server.js"]
+# Generate HTML and serve with nginx
+CMD ./generate.sh && cp /app/index.html /usr/share/nginx/html/index.html && nginx -g 'daemon off;'

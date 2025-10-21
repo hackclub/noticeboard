@@ -8,7 +8,9 @@ Simple page to notify users during downtime.
 2. Point to this repository
 3. Set the environment variable:
    - `DISPLAY_TEXT` - Your message (supports Markdown)
-4. Set port to `6060`
+4. Set port to `80`
+
+**Note:** Changing `DISPLAY_TEXT` only requires a container restart, not a rebuild. The HTML is generated at container startup.
 
 Example:
 ```
@@ -28,5 +30,7 @@ DISPLAY_TEXT=Hackatime is currently moving to a new, faster server\n\nIt'll take
 
 ```bash
 docker build -t notice .
-docker run -p 6060:6060 -e DISPLAY_TEXT="Down for maintenance" notice
+docker run -p 8080:80 -e DISPLAY_TEXT="Down for maintenance" notice
 ```
+
+Visit http://localhost:8080 to see your notice.
