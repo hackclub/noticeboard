@@ -6,8 +6,11 @@ DISPLAY_TEXT="${DISPLAY_TEXT:-Welcome to Hack Club!}"
 # Process \n escape sequences into actual newlines
 PROCESSED_TEXT=$(echo "$DISPLAY_TEXT" | sed 's/\\n/\n/g')
 
+# Escape backticks and backslashes for JavaScript template literal
+ESCAPED_TEXT=$(echo "$PROCESSED_TEXT" | sed 's/\\/\\\\/g' | sed 's/`/\\`/g' | sed 's/\$/\\$/g')
+
 # Generate static HTML with the display text embedded
-cat > /app/index.html << 'EOF'
+cat > /app/index.html << EOF
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -130,12 +133,7 @@ cat > /app/index.html << 'EOF'
     </div>
     <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
     <script>
-        const displayText = `EOF
-cat >> /app/index.html << EOF
-$PROCESSED_TEXT
-EOF
-cat >> /app/index.html << 'EOF'
-`;
+        const displayText = \`${ESCAPED_TEXT}\`;
         document.getElementById('displayText').innerHTML = marked.parse(displayText);
     </script>
 </body>
