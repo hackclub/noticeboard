@@ -9,7 +9,10 @@ PROCESSED_TEXT=$(echo "$DISPLAY_TEXT" | sed 's/\\n/\n/g')
 # Escape backticks and backslashes for JavaScript template literal
 ESCAPED_TEXT=$(echo "$PROCESSED_TEXT" | sed 's/\\/\\\\/g' | sed 's/`/\\`/g' | sed 's/\$/\\$/g')
 
-# Generate static HTML with the display text embedded
+# Render markdown to HTML
+RENDERED_HTML=$(echo "$PROCESSED_TEXT" | markdown)
+
+# Generate static HTML with rendered content
 cat > /app/index.html << EOF
 <!DOCTYPE html>
 <html lang="en">
@@ -26,6 +29,7 @@ cat > /app/index.html << EOF
             box-sizing: border-box;
         }
 
+
         body {
             font-family: 'Phantom Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: #fafbfc;
@@ -37,6 +41,7 @@ cat > /app/index.html << EOF
             justify-content: center;
         }
 
+
         .logo {
             position: absolute;
             top: 0;
@@ -47,11 +52,13 @@ cat > /app/index.html << EOF
             opacity: 0.95;
         }
 
+
         .container {
             width: 100%;
             max-width: 650px;
             padding: 2rem;
         }
+
 
         .display-text {
             font-size: 1.375rem;
@@ -61,6 +68,7 @@ cat > /app/index.html << EOF
             color: #252429;
         }
 
+
         .display-text a {
             color: #ec3750;
             text-decoration: none;
@@ -69,10 +77,12 @@ cat > /app/index.html << EOF
             font-weight: 600;
         }
 
+
         .display-text a:hover {
             color: #ff8c37;
             border-bottom-color: #ff8c37;
         }
+
 
         .display-text img {
             max-width: 100%;
@@ -83,22 +93,27 @@ cat > /app/index.html << EOF
             display: block;
         }
 
+
         .display-text p {
             margin: 1.75rem 0;
         }
+
 
         .display-text p:first-child {
             margin-top: 0;
         }
 
+
         .display-text p:last-child {
             margin-bottom: 0;
         }
+
 
         .display-text strong {
             color: #ec3750;
             font-weight: 700;
         }
+
 
         .display-text code {
             background: #f0f0f1;
@@ -109,6 +124,7 @@ cat > /app/index.html << EOF
             color: #252429;
         }
 
+
         @media (max-width: 768px) {
             .logo {
                 width: 130px;
@@ -116,9 +132,11 @@ cat > /app/index.html << EOF
                 left: 1rem;
             }
 
+
             .display-text {
                 font-size: 1.15rem;
             }
+
 
             .container {
                 padding: 1.5rem;
@@ -129,13 +147,10 @@ cat > /app/index.html << EOF
 <body>
     <img class="logo" src="https://assets.hackclub.com/flag-orpheus-top.svg" alt="Hack Club">
     <div class="container">
-        <div class="display-text" id="displayText">Loading...</div>
+        <div class="display-text">
+$RENDERED_HTML
+        </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
-    <script>
-        const displayText = \`${ESCAPED_TEXT}\`;
-        document.getElementById('displayText').innerHTML = marked.parse(displayText);
-    </script>
 </body>
 </html>
 EOF

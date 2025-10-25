@@ -1,5 +1,8 @@
 FROM nginx:alpine
 
+# Install markdown processor
+RUN apk add --no-cache markdown
+
 WORKDIR /app
 
 # Copy the generation script
