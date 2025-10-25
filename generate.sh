@@ -3,40 +3,30 @@ set -e
 
 DISPLAY_TEXT="${DISPLAY_TEXT:-Welcome to Hack Club!}"
 
-echo "=== DEBUG: Original DISPLAY_TEXT ==="
+# Debug: Show input
+echo "=== Input DISPLAY_TEXT ==="
 echo "$DISPLAY_TEXT"
-echo "==================================="
+echo "==========================="
 
 # Convert escape sequences to actual characters for markdown processing
 # Coolify double-escapes, so we need to process twice
 # First, use printf to handle the first level of escaping
 STEP1=$(printf '%b' "$DISPLAY_TEXT")
 
-echo "=== DEBUG: After first printf ==="
-echo "$STEP1"
-echo "================================="
-
 # Second, use printf again to convert \n to actual newlines and unescape quotes
 # Also handle \r\n (Windows line endings)
 STEP2=$(printf '%b' "$STEP1" | sed 's/\\r//g')
 
-echo "=== DEBUG: After second printf ==="
-echo "$STEP2"
-echo "=================================="
-
 # Remove the backslash before ! to fix image syntax, and unescape apostrophes
 PROCESSED_TEXT=$(echo "$STEP2" | sed "s/\\\\'/'/g" | sed 's/\\!/!/g')
-
-echo "=== DEBUG: After third printf (final processed) ==="
-echo "$PROCESSED_TEXT"
-echo "===================================================="
 
 # Render markdown to HTML using discount package (provides the 'markdown' command)
 RENDERED_HTML=$(printf '%s' "$PROCESSED_TEXT" | markdown)
 
-echo "=== DEBUG: After markdown rendering ==="
+# Debug: Show final output
+echo "=== Final HTML Output ==="
 echo "$RENDERED_HTML"
-echo "========================================"
+echo "========================="
 
 # Generate static HTML with rendered content
 cat > /app/index.html << EOF
