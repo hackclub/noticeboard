@@ -17,7 +17,8 @@ echo "$STEP1"
 echo "================================="
 
 # Second, use printf again to convert \n to actual newlines and unescape quotes
-STEP2=$(printf '%b' "$STEP1")
+# Also handle \r\n (Windows line endings)
+STEP2=$(printf '%b' "$STEP1" | sed 's/\\r//g')
 
 echo "=== DEBUG: After second printf ==="
 echo "$STEP2"
