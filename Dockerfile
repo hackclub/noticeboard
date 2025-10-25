@@ -1,7 +1,7 @@
 FROM nginx:alpine
 
-# Install markdown processor
-RUN apk add --no-cache markdown
+# Install markdown processor (discount is the proper C implementation)
+RUN apk add --no-cache discount
 
 WORKDIR /app
 
