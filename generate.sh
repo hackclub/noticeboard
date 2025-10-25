@@ -23,15 +23,15 @@ echo "=== DEBUG: After second printf ==="
 echo "$STEP2"
 echo "=================================="
 
-# Third pass to handle any remaining escapes (apostrophes, backslashes)
-PROCESSED_TEXT=$(printf '%b' "$STEP2")
+# Remove the backslash before ! to fix image syntax, and unescape apostrophes
+PROCESSED_TEXT=$(echo "$STEP2" | sed "s/\\\\'/'/g" | sed 's/\\!/!/g')
 
 echo "=== DEBUG: After third printf (final processed) ==="
 echo "$PROCESSED_TEXT"
 echo "===================================================="
 
 # Render markdown to HTML using discount package (provides the 'markdown' command)
-RENDERED_HTML=$(printf '%s' "$PROCESSED_TEXT" | markdown | sed "s/\\\\'/'/g" | sed 's/\\\\!/!/g')
+RENDERED_HTML=$(printf '%s' "$PROCESSED_TEXT" | markdown)
 
 echo "=== DEBUG: After markdown rendering ==="
 echo "$RENDERED_HTML"
