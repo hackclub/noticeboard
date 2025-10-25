@@ -16,10 +16,17 @@ echo "=== DEBUG: After first printf ==="
 echo "$STEP1"
 echo "================================="
 
-# Second, use printf again to convert \n to actual newlines
-PROCESSED_TEXT=$(printf '%b' "$STEP1")
+# Second, use printf again to convert \n to actual newlines and unescape quotes
+STEP2=$(printf '%b' "$STEP1")
 
-echo "=== DEBUG: After second printf (final processed) ==="
+echo "=== DEBUG: After second printf ==="
+echo "$STEP2"
+echo "=================================="
+
+# Third pass to handle any remaining escapes (apostrophes, backslashes)
+PROCESSED_TEXT=$(printf '%b' "$STEP2")
+
+echo "=== DEBUG: After third printf (final processed) ==="
 echo "$PROCESSED_TEXT"
 echo "===================================================="
 
