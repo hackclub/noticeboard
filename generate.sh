@@ -4,13 +4,10 @@ set -e
 DISPLAY_TEXT="${DISPLAY_TEXT:-Welcome to Hack Club!}"
 
 # Process \n escape sequences into actual newlines
-PROCESSED_TEXT=$(echo "$DISPLAY_TEXT" | sed 's/\\n/\n/g')
-
-# Escape backticks and backslashes for JavaScript template literal
-ESCAPED_TEXT=$(echo "$PROCESSED_TEXT" | sed 's/\\/\\\\/g' | sed 's/`/\\`/g' | sed 's/\$/\\$/g')
+PROCESSED_TEXT=$(printf "%b" "$DISPLAY_TEXT")
 
 # Render markdown to HTML
-RENDERED_HTML=$(echo "$PROCESSED_TEXT" | markdown)
+RENDERED_HTML=$(printf "%s" "$PROCESSED_TEXT" | markdown)
 
 # Generate static HTML with rendered content
 cat > /app/index.html << EOF
