@@ -4,11 +4,11 @@ set -e
 DISPLAY_TEXT="${DISPLAY_TEXT:-Welcome to Hack Club!}"
 
 # Convert \n escape sequences to actual newlines for markdown processing
-# Use printf %b to interpret backslash escapes
-PROCESSED_TEXT=$(printf '%b\n' "$DISPLAY_TEXT")
+# First replace literal \\n with \n, then use printf %b to interpret
+PROCESSED_TEXT=$(echo "$DISPLAY_TEXT" | sed 's/\\n/\n/g')
 
 # Render markdown to HTML using the markdown command (Discount)
-RENDERED_HTML=$(printf '%s' "$PROCESSED_TEXT" | markdown)
+RENDERED_HTML=$(echo "$PROCESSED_TEXT" | markdown)
 
 # Generate static HTML with rendered content
 cat > /app/index.html << EOF
