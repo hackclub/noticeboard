@@ -8,12 +8,20 @@ echo "$DISPLAY_TEXT"
 echo "==================================="
 
 # Convert escape sequences to actual characters for markdown processing
-# Use printf to interpret all escape sequences properly
-PROCESSED_TEXT=$(printf '%b' "$DISPLAY_TEXT")
+# Coolify double-escapes, so we need to process twice
+# First, use printf to handle the first level of escaping
+STEP1=$(printf '%b' "$DISPLAY_TEXT")
 
-echo "=== DEBUG: After printf processing ==="
+echo "=== DEBUG: After first printf ==="
+echo "$STEP1"
+echo "================================="
+
+# Second, use printf again to convert \n to actual newlines
+PROCESSED_TEXT=$(printf '%b' "$STEP1")
+
+echo "=== DEBUG: After second printf (final processed) ==="
 echo "$PROCESSED_TEXT"
-echo "======================================"
+echo "===================================================="
 
 # Render markdown to HTML using the markdown command (Perl version in Alpine)
 RENDERED_HTML=$(printf '%s' "$PROCESSED_TEXT" | markdown)
