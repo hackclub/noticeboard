@@ -30,8 +30,8 @@ echo "=== DEBUG: After third printf (final processed) ==="
 echo "$PROCESSED_TEXT"
 echo "===================================================="
 
-# Render markdown to HTML using mkd2html from discount package
-RENDERED_HTML=$(printf '%s' "$PROCESSED_TEXT" | mkd2html)
+# Render markdown to HTML using discount package (provides the 'markdown' command)
+RENDERED_HTML=$(printf '%s' "$PROCESSED_TEXT" | markdown | sed "s/\\\\'/'/g" | sed 's/\\\\!/!/g')
 
 echo "=== DEBUG: After markdown rendering ==="
 echo "$RENDERED_HTML"
