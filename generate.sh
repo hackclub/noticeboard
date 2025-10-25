@@ -3,13 +3,24 @@ set -e
 
 DISPLAY_TEXT="${DISPLAY_TEXT:-Welcome to Hack Club!}"
 
+echo "=== DEBUG: Original DISPLAY_TEXT ==="
+echo "$DISPLAY_TEXT"
+echo "==================================="
+
 # Convert escape sequences to actual characters for markdown processing
 # Use printf to interpret all escape sequences properly
 PROCESSED_TEXT=$(printf '%b' "$DISPLAY_TEXT")
 
-# Render markdown to HTML using the markdown command (Discount)
-# Use -f flags to enable links, images, and other features
-RENDERED_HTML=$(printf '%s' "$PROCESSED_TEXT" | markdown -f links,image,html)
+echo "=== DEBUG: After printf processing ==="
+echo "$PROCESSED_TEXT"
+echo "======================================"
+
+# Render markdown to HTML using the markdown command (Perl version in Alpine)
+RENDERED_HTML=$(printf '%s' "$PROCESSED_TEXT" | markdown)
+
+echo "=== DEBUG: After markdown rendering ==="
+echo "$RENDERED_HTML"
+echo "========================================"
 
 # Generate static HTML with rendered content
 cat > /app/index.html << EOF
